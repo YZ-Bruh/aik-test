@@ -21,26 +21,19 @@ fi
 # Bilgileri al - Get info's
 echo
 echo "GitHub depo yayın yükleyicisi V1 | By YZBruh"
-echo "Kullanıcı adı:"
-read USERNAME
+read -p "Kullanıcı adı: " USERNAME
 echo
-echo "Depo adı:"
-read REPO
+read -p "Depo adı: " REPO
 echo
-echo "Etiket adı:"
-read TAG_NAME
+read -p "Etiket adı: " TAG_NAME
 echo
-echo "Yayın başlığı:"
-read RELEASE_NAME
+read -p "Yayın başlığı: " RELEASE_NAME
 echo
-echo "Erişim tokeni:"
-read ACCESS_TOKEN
+read -p "Erişim tokeni: " ACCESS_TOKEN
 echo
-echo "Kaydedilecek dosya adı (yayındaki ad):"
-read RELEASE_FILEN
+read -p "Kaydedilecek dosya adı (yayındaki ad): " RELEASE_FILEN
 echo
-echo "Yüklenecek dosyanın adı:"
-read FILE
+read -p "Yüklenecek dosyanın adı: " FILE
 echo
 
 # GitHub yayın API'si üzerinden yayını oluştur
