@@ -4,6 +4,8 @@
 
 :: Logcat temizliği - Clear logcat
 cls
+:: Curl uyarısı - Curl warning
+echo "BU BETİK SADECE CURL KURULU İSE ÇALIŞIR!!!"
 
 :: Bilgileri al - Get info's
 set /p USERNAME="Kullanıcı adı: "
