@@ -27,6 +27,6 @@ browser_download_url=$(echo $response | jq -r '.upload_url' | sed -e 's/{?name,l
 browser_download_url="${browser_download_url}?name="$RELEASE_FILEN""
 
 # Yayın dosyasını ekle
-curl -X POST -H "Authorization: token $ACCESS_TOKEN" -H "Content-Type: application/zip" --data-binary @$FILE "$browser_download_url"
+curl -X POST -H "Authorization: token $ACCESS_TOKEN" -H "Content-Type: application/zip" --data-binary @system.img.xz "$browser_download_url"
 
 unset USERNAME REPO TAG_NAME RELEASE_NAME RELEASE_FILEN ACCESS_TOKEN FILE
