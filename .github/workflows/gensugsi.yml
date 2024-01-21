@@ -21,17 +21,17 @@ on:
         default: ''
         type: choice
         options:
-        - arm32
-        - a64
         - arm64
+        - a64
+        - arm32
       VNDK_TYPE:
         description: 'VNDK type (vndklite or vndk)'
         required: true
         default: ''
         type: choice
         options:
-        - vndklite
         - vndk
+        - vndklite
       TYPE:
         description: 'Type (vanilla or gapps)'
         required: true
@@ -47,17 +47,7 @@ on:
       VERSION:
         description: 'Android version (image)'
         required: true
-        default: ''
-        type: choice
-        options:
-        - A8
-        - A9
-        - A10
-        - A11
-        - A12
-        - A12L
-        - A13
-        - A14
+        default: '14'
 
 jobs:
   build:
