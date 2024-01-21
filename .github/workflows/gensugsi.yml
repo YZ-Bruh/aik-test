@@ -100,7 +100,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          /home/gsi/treble_adapter/"$name".xz
+          /home/gsi/treble_adapter/*.xz
         name: GSI-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
         body: |
