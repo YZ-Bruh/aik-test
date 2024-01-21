@@ -1,0 +1,66 @@
+name: Generate PHH-SU varianted GSI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.event.repository.owner.id == github.event.sender.id
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Check Out
+      uses: actions/checkout@v3
+
+    - name: Setup environment
+      run: |
+        sudo apt update
+        sudo apt upgrade -y
+        sudo apt install cpio simg2img git xz-utils -y
+
+    - name: Get treble adapter
+      run: |
+        cd /home
+        sudo mkdir gsi
+        sudo chmod 777 gsi
+        cd gsi
+        git clone https://github.com/ponces/treble_adapter
+        cd treble_adapter
+        sudo chmod -R 777 *
+
+    - name: Download and extract GSI
+      run: |
+        cd /home/gsi/treble*
+        wget https://github.com/ponces/treble_aosp/releases/download/v2023.09.19/aosp-arm64-ab-gapps-13.0-20230919.img.xz
+        xz -dv *.xz
+        rm -rf *.xz
+        mv aosp*.img system.img
+
+    - name: Generate image
+      run: |
+        cd /home/gsi/treble*
+        sudo bash su.sh system.img
+        rm -rf system.img
+        mv s-su.img aosp-arm64-ab-gapps-su-13.0-20230919.img
+        xz -cv aosp-arm64-ab-gapps-su-13.0-20230919.img -T0 > aosp-arm64-ab-gapps-su-13.0-20230919.img.xz
+        if [ -f aosp*.img ]; then
+            rm -rf aosp*.img
+        fi
+
+    - name: Upload image
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          /home/gsi/treble_adapter/aosp-arm64-ab-gapps-su-13.0-20230919.img.xz
+        name: AOSP 13.0 PHH-SU GAPPS GSI
+        tag_name: phhsugsi
+        body: |
+          Android: 13
+          Type: A/B
+          Arch: arm64
+          Vanilla: false
+          GApps: true
+          PHH-SU: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
