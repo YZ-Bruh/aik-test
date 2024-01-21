@@ -2,6 +2,62 @@ name: Generate PHH-SU varianted GSI
 
 on:
   workflow_dispatch:
+    inputs:
+      GSI_URL:
+        description: 'GSI Directly download link'
+        required: true
+        default: ''
+      PART_TYPE:
+        description: 'Partition style (A/B or A-Only)'
+        required: true
+        default: ''
+        type: choice
+        options:
+        - A/B
+        - A-Only
+      ARCH:
+        description: 'Target arch (arm32/a64/arm64)'
+        required: true
+        default: ''
+        type: choice
+        options:
+        - arm32
+        - a64
+        - arm64
+      VNDK_TYPE:
+        description: 'VNDK type (vndklite or vndk)'
+        required: true
+        default: ''
+        type: choice
+        options:
+        - vndklite
+        - vndk
+      TYPE:
+        description: 'Type (vanilla or gapps)'
+        required: true
+        default: ''
+        type: choice
+        options:
+        - gapps
+        - vanilla
+      DISTRO:
+        description: 'Distribution name'
+        required: true
+        default: ''
+      VERSION:
+        description: 'Android version (image)'
+        required: true
+        default: ''
+        type: choice
+        options:
+        - A8
+        - A9
+        - A10
+        - A11
+        - A12
+        - A12L
+        - A13
+        - A14
 
 jobs:
   build:
@@ -23,6 +79,7 @@ jobs:
         cd /home
         sudo mkdir gsi
         sudo chmod 777 gsi
+        mkdir gsi/image
         cd gsi
         git clone https://github.com/ponces/treble_adapter
         cd treble_adapter
@@ -30,36 +87,37 @@ jobs:
 
     - name: Download and extract GSI
       run: |
-        cd /home/gsi/treble*
-        wget https://github.com/ponces/treble_aosp/releases/download/v2023.09.19/aosp-arm64-ab-gapps-13.0-20230919.img.xz
+        cd /home/gsi/image
+        wget ${{ github.event.inputs.GSI_URL }}
         xz -dv *.xz
         rm -rf *.xz
-        mv aosp*.img system.img
+        mv *.img system.img
+        mv system.img /home/gsi/treble*/system.img
 
     - name: Generate image
       run: |
         cd /home/gsi/treble*
         sudo bash su.sh system.img
         rm -rf system.img
-        mv s-su.img aosp-arm64-ab-gapps-su-13.0-20230919.img
-        xz -cv aosp-arm64-ab-gapps-su-13.0-20230919.img -T0 > aosp-arm64-ab-gapps-su-13.0-20230919.img.xz
-        if [ -f aosp*.img ]; then
-            rm -rf aosp*.img
+        name=""${{ github.event.inputs.DISTRO }}"-"${{ github.event.inputs.ARCH }}"-"${{ github.event.inputs.TYPE }}"-"${{ github.event.inputs.VNDK_TYPE }}"-"${{ github.event.inputs.VERSION }}".img"
+        mv s-su.img "$name"
+        xz -cv "$name" -T0 > "$name".xz
+        if [ -f system.img ]; then
+            rm -rf system.img
         fi
 
     - name: Upload image
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          /home/gsi/treble_adapter/aosp-arm64-ab-gapps-su-13.0-20230919.img.xz
-        name: AOSP 13.0 PHH-SU GAPPS GSI
+          /home/gsi/treble_adapter/"$name".xz
+        name: GSI-${{ github.run_id }}
         tag_name: phhsugsi
         body: |
-          Android: 13
-          Type: A/B
-          Arch: arm64
-          Vanilla: false
-          GApps: true
-          PHH-SU: true
+          Android: ${{ github.event.inputs.VERSION }}
+          Partition type: ${{ github.event.inputs.PART_TYPE }}
+          Arch: ${{ github.event.inputs.ARCH }}
+          Type: ${{ github.event.inputs.TYPE }}
+          PHH-SU : true xD
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
