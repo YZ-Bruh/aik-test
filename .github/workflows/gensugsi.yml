@@ -13,7 +13,7 @@ on:
         default: ''
         type: choice
         options:
-        - an
+        - ab
         - aonly
       ARCH:
         description: 'Target arch (arm32/a64/arm64)'
