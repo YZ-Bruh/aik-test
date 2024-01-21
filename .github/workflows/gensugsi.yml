@@ -8,13 +8,13 @@ on:
         required: true
         default: ''
       PART_TYPE:
-        description: 'Partition style (A/B or A-Only)'
+        description: 'Partition style (ab or aonly)'
         required: true
         default: ''
         type: choice
         options:
-        - A/B
-        - A-Only
+        - an
+        - aonly
       ARCH:
         description: 'Target arch (arm32/a64/arm64)'
         required: true
