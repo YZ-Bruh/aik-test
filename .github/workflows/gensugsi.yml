@@ -104,7 +104,8 @@ jobs:
         name: GSI-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
         body: |
-          Android: ${{ github.event.inputs.VERSION }}
+          Distribution name: ${{ github.event.inputs.DISTRO }}
+          Android version: ${{ github.event.inputs.VERSION }}
           Partition type: ${{ github.event.inputs.PART_TYPE }}
           Arch: ${{ github.event.inputs.ARCH }}
           Type: ${{ github.event.inputs.TYPE }}
