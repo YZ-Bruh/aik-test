@@ -16,7 +16,7 @@ jobs:
     - name: Setup environment
       run: |
         sudo apt update
-        sudo apt install cpio simg2img git xz-utils -y
+        sudo apt install cpio simg2img git xz-utils xattr -y
 
     - name: Get treble adapter
       run: |
