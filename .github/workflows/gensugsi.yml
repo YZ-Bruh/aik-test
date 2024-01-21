@@ -92,7 +92,7 @@ jobs:
         xz -dv *.xz
         rm -rf *.xz
         mv *.img system.img
-        mv system.img /home/gsi/treble*/system.img
+        mv system.img /home/gsi/treble_adapter/system.img
 
     - name: Generate image
       run: |
